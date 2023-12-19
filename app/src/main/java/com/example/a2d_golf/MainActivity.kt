@@ -31,46 +31,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    initGameView();
+                    GameView();
                 }
             }
         }
-    }
-}
-
-@Composable
-fun initGameView(modifier: Modifier = Modifier) {
-    Column {
-        Box {
-            Image(
-                painter = painterResource(id = R.drawable.background),
-                contentScale = ContentScale.FillBounds,
-                contentDescription = null,
-                modifier = modifier.fillMaxSize()
-            )
-        }
-    }
-    Column{
-        Box(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .fillMaxWidth()
-        ){
-            Image(
-                painter = painterResource(id = R.drawable.firstmap),
-                contentScale = ContentScale.FillBounds,
-                contentDescription = null,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight())
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun initGamePreview() {
-    _2DGolfTheme {
-        initGameView();
     }
 }
