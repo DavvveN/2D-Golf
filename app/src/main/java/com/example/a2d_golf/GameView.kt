@@ -2,6 +2,7 @@ package com.example.a2d_golf
 
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -19,8 +20,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -37,11 +40,14 @@ fun GameView(
     Background();
     DisplayLevelImage(modifier = Modifier, gameState, levelData);
     //DisplayFlag();
+    DrawLine()
 }
 
 @Composable
 fun Background(modifier : Modifier = Modifier){
-    Column {
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
         Box {
             Image(
                 painter = painterResource(id = R.drawable.background),
@@ -63,8 +69,7 @@ fun DisplayLevelImage(
             modifier = Modifier
                 .fillMaxSize()
         ){
-            /**
-            Ball(gameState.ballState);
+            Ball(gameState.ballState, -850f, 200f);
             Image(
                 painter = painterResource(id = R.drawable.firstmap),
                 contentScale = ContentScale.FillBounds,
@@ -73,8 +78,7 @@ fun DisplayLevelImage(
                     .fillMaxWidth()
                     .fillMaxHeight()
             )
-            **/
-
+            /**
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -85,33 +89,93 @@ fun DisplayLevelImage(
                     LevelPart(comp);
                 }
 
-                /**
-                Column(
-                    modifier = Modifier.fillMaxHeight(),
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.first_1),
-                        contentDescription = null,
-                    )
-                }
-                Column(
-                    modifier = Modifier.fillMaxHeight(),
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.first_3),
-                        contentDescription = null
-                    )
-                    Image(
-                        painter = painterResource(id = R.drawable.first_2),
-                        contentDescription = null
-                    )
-
-                }
-                **/
             }
+            **/
         }
+    }
+}
+@Composable
+fun DrawLine(){
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        drawLine(
+            start = Offset(x = 0f, y = 735f),
+            end = Offset(x = 565f, y = 735f),
+            color = Color.Red,
+            strokeWidth = 3f
+        )
+        drawLine(
+            start = Offset(x = 565f, y = 735f),
+            end = Offset(x = 852f, y = 520f),
+            color = Color.Red,
+            strokeWidth = 3f
+        )
+        translate(left = -271f, top = 72f) {
+            drawCircle(Color.Red, radius = 10.dp.toPx())
+        }
+
+        drawLine(
+            start = Offset(x = 885f, y = 534f),
+            end = Offset(x = 885f, y = 735f),
+            color = Color.Red,
+            strokeWidth = 3f
+        )
+
+        drawLine(
+            start = Offset(x = 885f, y = 735f),
+            end = Offset(x = 1176f, y = 735f),
+            color = Color.Red,
+            strokeWidth = 3f
+        )
+
+        drawLine(
+            start = Offset(x = 1176f, y = 735f),
+            end = Offset(x = 1176f, y = 475f),
+            color = Color.Red,
+            strokeWidth = 3f
+        )
+        translate(left = 62f, top = 0f) {
+            drawCircle(Color.Red, radius = 7.dp.toPx())
+        }
+        drawLine(
+            start = Offset(x = 1200f, y = 456f),
+            end = Offset(x = 1544f, y = 456f),
+            color = Color.Red,
+            strokeWidth = 3f
+        )
+        translate(left = 420f, top = 0f) {
+            drawCircle(Color.Red, radius = 7.dp.toPx())
+        }
+        drawLine(
+            start = Offset(x = 1568f, y = 465f),
+            end = Offset(x = 1568f, y = 825f),
+            color = Color.Red,
+            strokeWidth = 3f
+        )
+        drawLine(
+            start = Offset(x = 1568f, y = 825f),
+            end = Offset(x = 1798f, y = 825f),
+            color = Color.Red,
+            strokeWidth = 3f
+        )
+        drawLine(
+            start = Offset(x = 1798f, y = 825f),
+            end = Offset(x = 1798f, y = 695f),
+            color = Color.Red,
+            strokeWidth = 3f
+        )
+        translate(left = 689f, top = 228f) {
+            drawCircle(Color.Red, radius = 9.dp.toPx())
+        }
+
+        drawLine(
+            start = Offset(x = 1825f, y = 677f),
+            end = Offset(x = canvasWidth, y = 677f),
+            color = Color.Red,
+            strokeWidth = 3f
+        )
+
     }
 }
 
