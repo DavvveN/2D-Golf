@@ -1,33 +1,30 @@
 package com.example.a2d_golf
 
-import androidx.compose.foundation.BorderStroke
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import androidx.tv.material3.Border
 
 
 @Composable
-fun GameView(modifier: Modifier = Modifier){
+fun GameView(
+    viewModel: GameViewModel = viewModel()
+){
+    val gameState by viewModel.gameState.collectAsState()
+
     Background();
-    DisplayLevelImage();
-    DisplayFlag();
+    DisplayLevelImage(modifier = Modifier, gameState);
+    //DisplayFlag();
 }
 
 @Composable
@@ -45,13 +42,14 @@ fun Background(modifier : Modifier = Modifier){
 }
 
 @Composable
-fun DisplayLevelImage(modifier: Modifier = Modifier){
+fun DisplayLevelImage(modifier: Modifier = Modifier, gameState: GameState){
     Column{
         Box(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth()
         ){
+            Ball(gameState.ballState);
             Image(
                 painter = painterResource(id = R.drawable.firstmap),
                 contentScale = ContentScale.FillBounds,
@@ -59,7 +57,6 @@ fun DisplayLevelImage(modifier: Modifier = Modifier){
                 modifier = modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .border(BorderStroke(2.dp, SolidColor(Color.Red)))
             )
         }
     }
