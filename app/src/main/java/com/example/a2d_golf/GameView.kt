@@ -4,6 +4,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,9 +47,9 @@ fun DisplayLevelImage(modifier: Modifier = Modifier, gameState: GameState){
     Column{
         Box(
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .fillMaxWidth()
+                .fillMaxSize()
         ){
+            /**
             Ball(gameState.ballState);
             Image(
                 painter = painterResource(id = R.drawable.firstmap),
@@ -58,6 +59,30 @@ fun DisplayLevelImage(modifier: Modifier = Modifier, gameState: GameState){
                     .fillMaxWidth()
                     .fillMaxHeight()
             )
+            **/
+
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .fillMaxWidth()
+            ){
+                Column{
+                    Image(
+                        painter = painterResource(id = R.drawable.first_1),
+                        contentDescription = null
+                    )
+                }
+                Column(){
+                    Image(
+                        painter = painterResource(id = R.drawable.first_3),
+                        contentDescription = null
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.first_2),
+                        contentDescription = null
+                    )
+                }
+            }
         }
     }
 }
