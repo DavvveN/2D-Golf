@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -130,18 +131,21 @@ fun DisplayFlag(modifier: Modifier = Modifier){
 
 @Composable
 fun LevelPart(views : List<GridComponent>){
+
+    //TODO - last GridComponent cover the rest of the screen.
     val colMod = Modifier
         .fillMaxHeight()
         .border(BorderStroke(2.dp, SolidColor(Color.Red)))
 
     for(v in views){
         if(v.getIsLast()){
-            colMod.fillMaxWidth()
+            colMod.padding(end = 10.dp)
         }
     }
     Column(
         modifier = colMod,
-        verticalArrangement = Arrangement.Bottom
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally
     ){
         for(v in views){
             var imageModifier = Modifier

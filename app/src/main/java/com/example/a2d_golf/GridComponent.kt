@@ -1,6 +1,12 @@
 package com.example.a2d_golf
 
-class GridComponent (private val id: String, private val shape : Shape, private val isLast : Boolean){
+import androidx.compose.ui.unit.Dp
+
+class GridComponent (
+    private val id: String,
+    private val shape : Shape,
+    private val isLast : Boolean
+){
     fun getId() : String{
         return id;
     }
