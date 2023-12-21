@@ -38,7 +38,7 @@ fun GameView(
     val gameState by viewModel.gameState.collectAsState()
 
     Background();
-    DisplayLevelImage(modifier = Modifier, gameState, levelData);
+    DisplayLevelImage(modifier = Modifier, gameState);
     //DisplayFlag();
     DrawOutline(levelData.firstLevel)
 }
@@ -62,8 +62,7 @@ fun Background(modifier : Modifier = Modifier){
 @Composable
 fun DisplayLevelImage(
     modifier: Modifier = Modifier,
-    gameState: GameState,
-    levelData: LevelData){
+    gameState: GameState){
     Column{
         Box(
             modifier = Modifier
@@ -78,19 +77,6 @@ fun DisplayLevelImage(
                     .fillMaxWidth()
                     .fillMaxHeight()
             )
-            /**
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomStart)
-            ) {
-                //TODO get current level - Not just first
-                for (comp in levelData.firstLevel){
-                    LevelPart(comp);
-                }
-
-            }
-            **/
         }
     }
 }
