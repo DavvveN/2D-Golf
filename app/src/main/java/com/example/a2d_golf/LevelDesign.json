@@ -1,0 +1,22 @@
+{
+  "levels": {
+    "level1":{
+      "border": [
+        {"type" :  "line", "xStart" :  0, "yStart" :  735, "xEnd" :  565, "yEnd" :  735},
+        {"type" :  "line", "xStart" :  565, "yStart" :  735, "xEnd" :  852, "yEnd" :  520},
+        {"type" :  "circle", "leftTranslate" :  -271, "topTranslate" : 72, "radius" :  10},
+        {"type" :  "line", "xStart" :  885, "yStart" :  534, "xEnd" :  885, "yEnd" :  735},
+        {"type" :  "line", "xStart" :  885, "yStart" :  735, "xEnd" :  1176, "yEnd" :  735},
+        {"type" :  "line", "xStart" :  1176, "yStart" :  735, "xEnd" :  1176, "yEnd" :  475},
+        {"type" :  "circle", "leftTranslate" :  62, "topTranslate" : 0, "radius" :  7},
+        {"type" :  "line", "xStart" :  1200, "yStart" :  456, "xEnd" :  1544, "yEnd" :  465},
+        {"type" :  "circle", "leftTranslate" :  420, "topTranslate" : 0, "radius" :  7},
+        {"type" :  "line", "xStart" :  1568, "yStart" :  465, "xEnd" :  1568, "yEnd" :  825},
+        {"type" :  "line", "xStart" :  1568, "yStart" :  825, "xEnd" :  1798, "yEnd" :  825},
+        {"type" :  "line", "xStart" :  1798, "yStart" :  825, "xEnd" :  1798, "yEnd" :  695},
+        {"type" :  "circle", "leftTranslate" :  689, "topTranslate" : 228, "radius" :  9},
+        {"type" :  "line", "xStart" :  1825, "yStart" :  677, "xEnd" :  "canvasWidth", "yEnd" :  677}
+      ]
+    }
+  }
+}
