@@ -16,10 +16,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -34,41 +36,47 @@ import androidx.compose.ui.unit.dp
 fun GameView(
     viewModel: GameViewModel = viewModel(),
     levelData: LevelData = LevelData()
-){
+) {
     val gameState by viewModel.gameState.collectAsState()
+    val bState by viewModel.bState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            withFrameMillis {
+                viewModel.update(it)
+            }
+        }
+    }
 
     Background();
-    DisplayLevelImage(modifier = Modifier, gameState);
+    DisplayLevelImage(modifier = Modifier, bState = bState);
     //DisplayFlag();
     DrawOutline(levelData.firstLevel)
 }
 
 @Composable
-fun Background(modifier : Modifier = Modifier){
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-        Box {
-            Image(
-                painter = painterResource(id = R.drawable.background),
-                contentScale = ContentScale.FillBounds,
-                contentDescription = null,
-                modifier = modifier.fillMaxSize()
-            )
-        }
+fun Background(modifier: Modifier = Modifier) {
+    Box (modifier = Modifier.fillMaxSize()){
+        Image(
+            painter = painterResource(id = R.drawable.background),
+            contentScale = ContentScale.FillBounds,
+            contentDescription = null,
+            modifier = modifier.fillMaxSize()
+        )
     }
 }
 
 @Composable
 fun DisplayLevelImage(
     modifier: Modifier = Modifier,
-    gameState: GameState){
-    Column{
+    bState: BallState
+) {
+    Column {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-        ){
-            Ball(gameState.ballState, -850f, 200f);
+        ) {
+            Ball(ballState = bState)
             Image(
                 painter = painterResource(id = R.drawable.firstmap),
                 contentScale = ContentScale.FillBounds,
@@ -80,22 +88,36 @@ fun DisplayLevelImage(
         }
     }
 }
-@Composable
-fun DrawOutline(level : List<Drawable>){
-    Canvas(modifier = Modifier.fillMaxSize()) {
 
-        for(d in level){
-            if(d is Line ){
+@Composable
+fun Ball(ballState : BallState) {
+    Log.d("Ball", "Position: ${ballState.position.yPos}")
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        drawCircle(
+            center = Offset(x = ballState.position.xPos, y = ballState.position.yPos),
+            radius = ballState.RADIUS,
+            color = Color.Red
+        )
+    }
+}
+
+@Composable
+fun DrawOutline(level: List<Drawable>) {
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        for (d in level) {
+            if (d is Line) {
                 drawLine(
                     start = Offset(x = d.xStart, y = d.yStart),
                     end = Offset(x = d.xEnd, y = d.yEnd),
                     color = Color.Red,
                     strokeWidth = 3f
                 )
-            }else if(d is Circle){
-                translate (left = d.leftTranslate, top = d.topTranslate){
-                    drawCircle(Color.Red, radius = d.radius.dp.toPx())
-                }
+            } else if (d is Circle) {
+                drawCircle(
+                    center = Offset(x = d.xPos, y = d.yPos),
+                    radius = d.radius.dp.toPx(),
+                    color = Color.Red
+                )
             }
         }
 
@@ -104,9 +126,9 @@ fun DrawOutline(level : List<Drawable>){
 }
 
 @Composable
-fun DisplayFlag(modifier: Modifier = Modifier){
-    Column{
-        Box(){
+fun DisplayFlag(modifier: Modifier = Modifier) {
+    Column {
+        Box() {
             Image(
                 painter = painterResource(R.drawable.flagga),
                 contentDescription = null,
