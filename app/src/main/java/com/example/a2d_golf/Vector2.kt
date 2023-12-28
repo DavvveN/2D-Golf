@@ -28,11 +28,9 @@ class Vector2(var xPos : Float, var yPos : Float) {
     }
 
     //PARAMETER : LIST allowing addition of multiple vectors
-    fun add(v2 : List<Vector2>) : Vector2{
-        for(v in v2){
+    fun add(v : Vector2) : Vector2{
             xPos += v.xPos
             yPos += v.yPos
-        }
         return Vector2(xPos,yPos)
     }
 }

@@ -10,13 +10,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 enum class GameStatus{
-    STOPPED,
-    RUNNING;
-
+    FALLING,
+    ON_GROUND,
+    IN_MOTION
 }
 
 data class GameState(
-    var status :GameStatus = GameStatus.STOPPED,
+    var status :GameStatus = GameStatus.FALLING,
     val ballState: BallState = BallState(velocity = Vector2(0f,0f),position = Vector2(850f,200f))
 ){
     fun toggleStatus(a : GameStatus){
@@ -24,24 +24,49 @@ data class GameState(
     }
 }
 class GameViewModel(application: Application) : AndroidViewModel(application) {
-    private val _gameState = MutableStateFlow(GameState())
-    val gameState = _gameState.asStateFlow()
-    private val _bState = MutableStateFlow(gameState.value.ballState)
-    val bState = _bState.asStateFlow()
+    private var prevTime = 0L
+
+    //                        LEARNING KOTLIN JETPACK:
+    // ***********************************************************************
+    // _gameState and _bState are mutableStateFlows and thus are changeable
+    // gameState and bState derive from _gameState and _bState and are read only
+    // We can thus control changeability or readability in a given function
+    // ***********************************************************************
+
+
+    private var _gameState = MutableStateFlow(GameState())
+    var gameState = this._gameState.asStateFlow()
+    private var _bState = MutableStateFlow(this.gameState.value.ballState)
+    var bState = _bState.asStateFlow()
 
     private val physicsConst = PhysicsConst()
+    fun update(time : Long){
 
-    @Composable
-    fun startGame(){
-        GameView()
+        val deltaTime = (time - prevTime).toFloat() / 1000
+        prevTime = time
+
+        when (gameState.value.status){
+            GameStatus.FALLING -> handleFalling(deltaTime)
+            GameStatus.IN_MOTION -> handleInMotion()
+            GameStatus.ON_GROUND -> handleOnGround()
+        }
     }
 
-    fun update(deltaTime : Long){
-        //MULTIPLY THE VELOCITY VECTOR WITH GRAVITY
-        bState.value.velocity = bState.value.velocity.add(listOf(Vector2.VectorConst.UP.scale(physicsConst.GRAVITY * deltaTime)))
+    private fun handleFalling(deltaTime : Float){
 
-        //CHANGE POSITION IN RELATION TO VELOCITY * TIME
-        bState.value.position = bState.value.position.add(listOf(bState.value.velocity.scale(deltaTime * 1f)))
-        //TODO CHECK COLLISION
+        val gravityForce = Vector2.VectorConst.UP.scale(physicsConst.GRAVITY)
+        val newVelocity = bState.value.velocity.add(gravityForce.scale(deltaTime))
+
+        // Change position in relation to velocity * time
+        val newPosition = bState.value.position.add(newVelocity.scale(deltaTime))
+        _bState.value = BallState(velocity = newVelocity, position = newPosition)
+    }
+
+    private fun handleOnGround (){
+
+    }
+
+    private fun handleInMotion(){
+
     }
 }

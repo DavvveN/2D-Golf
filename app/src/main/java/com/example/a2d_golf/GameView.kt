@@ -30,12 +30,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 
 
 @Composable
 fun GameView(
     viewModel: GameViewModel = viewModel(),
-    levelData: LevelData = LevelData()
+    levelData: LevelData = LevelData(),
 ) {
     val gameState by viewModel.gameState.collectAsState()
     val bState by viewModel.bState.collectAsState()
@@ -45,6 +46,7 @@ fun GameView(
             withFrameMillis {
                 viewModel.update(it)
             }
+            //delay(16) // Delay for approximately 60 frames per second (1000 ms / 60)
         }
     }
 
@@ -91,7 +93,6 @@ fun DisplayLevelImage(
 
 @Composable
 fun Ball(ballState : BallState) {
-    Log.d("Ball", "Position: ${ballState.position.yPos}")
     Canvas(modifier = Modifier.fillMaxSize()) {
         drawCircle(
             center = Offset(x = ballState.position.xPos, y = ballState.position.yPos),
