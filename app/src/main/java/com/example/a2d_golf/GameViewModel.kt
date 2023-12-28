@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.Gravity
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.AndroidViewModel
+import androidx.room.util.copy
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -59,7 +60,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
         // Change position in relation to velocity * time
         val newPosition = bState.value.position.add(newVelocity.scale(deltaTime))
-        _bState.value = BallState(velocity = newVelocity, position = newPosition)
+        _bState.value = BallState(velocity = newVelocity.copy(), position = newPosition.copy())
     }
 
     private fun handleOnGround (){
