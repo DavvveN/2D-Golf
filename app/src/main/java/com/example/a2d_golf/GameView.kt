@@ -40,13 +40,16 @@ fun GameView(
 ) {
     val gameState by viewModel.gameState.collectAsState()
     val bState by viewModel.bState.collectAsState()
+    var prevTime = 0L;
 
     LaunchedEffect(Unit) {
+        delay(3000)
+        prevTime = System.currentTimeMillis()
         while (true) {
-            withFrameMillis {
-                viewModel.update(it)
-            }
-            //delay(16) // Delay for approximately 60 frames per second (1000 ms / 60)
+                val currTime = System.currentTimeMillis()
+                viewModel.update(deltaTime = (( currTime- prevTime).toFloat()) / 1000)
+                prevTime = currTime
+            delay(1000 / 60) // Delay for approximately 60 frames per second (1000 ms / 60)
         }
     }
 
@@ -54,11 +57,12 @@ fun GameView(
     DisplayLevelImage(modifier = Modifier, bState = bState);
     //DisplayFlag();
     DrawOutline(levelData.firstLevel)
+
 }
 
 @Composable
 fun Background(modifier: Modifier = Modifier) {
-    Box (modifier = Modifier.fillMaxSize()){
+    Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.background),
             contentScale = ContentScale.FillBounds,
@@ -73,31 +77,31 @@ fun DisplayLevelImage(
     modifier: Modifier = Modifier,
     bState: BallState
 ) {
-    Column {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Ball(ballState = bState)
-            Image(
-                painter = painterResource(id = R.drawable.firstmap),
-                contentScale = ContentScale.FillBounds,
-                contentDescription = null,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-            )
-        }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        /**
+        Image(
+            painter = painterResource(id = R.drawable.firstmap),
+            contentScale = ContentScale.FillBounds,
+            contentDescription = null,
+            modifier = modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+        )
+        **/
+        Ball(bState)
     }
 }
 
 @Composable
-fun Ball(ballState : BallState) {
+fun Ball(ballState: BallState) {
     Canvas(modifier = Modifier.fillMaxSize()) {
         drawCircle(
             center = Offset(x = ballState.position.xPos, y = ballState.position.yPos),
             radius = ballState.RADIUS,
-            color = Color.Red
+            color = Color.Yellow
         )
     }
 }
@@ -110,14 +114,14 @@ fun DrawOutline(level: List<Drawable>) {
                 drawLine(
                     start = Offset(x = d.xStart, y = d.yStart),
                     end = Offset(x = d.xEnd, y = d.yEnd),
-                    color = Color.Red,
-                    strokeWidth = 3f
+                    color = Color.Green,
+                    strokeWidth = 10f
                 )
             } else if (d is Circle) {
                 drawCircle(
                     center = Offset(x = d.xPos, y = d.yPos),
                     radius = d.radius.dp.toPx(),
-                    color = Color.Red
+                    color = Color.Green
                 )
             }
         }

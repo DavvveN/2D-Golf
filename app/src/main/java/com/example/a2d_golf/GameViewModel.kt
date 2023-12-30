@@ -18,7 +18,7 @@ enum class GameStatus{
 
 data class GameState(
     var status :GameStatus = GameStatus.FALLING,
-    val ballState: BallState = BallState(velocity = Vector2(0f,0f),position = Vector2(850f,200f))
+    val ballState: BallState = BallState(velocity = Vector2(0f,0f),position = Vector2(400f,200f))
 ){
     fun toggleStatus(a : GameStatus){
         status = a;
@@ -41,10 +41,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     var bState = _bState.asStateFlow()
 
     private val physicsConst = PhysicsConst()
-    fun update(time : Long){
-
-        val deltaTime = (time - prevTime).toFloat() / 1000
-        prevTime = time
+    fun update(deltaTime : Float){
 
         when (gameState.value.status){
             GameStatus.FALLING -> handleFalling(deltaTime)
@@ -61,6 +58,8 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         // Change position in relation to velocity * time
         val newPosition = bState.value.position.add(newVelocity.scale(deltaTime))
         _bState.value = BallState(velocity = newVelocity.copy(), position = newPosition.copy())
+        Log.i("abcdefg",newPosition.yPos.toString())
+
     }
 
     private fun handleOnGround (){
