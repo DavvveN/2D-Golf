@@ -1,12 +1,8 @@
 package com.example.a2d_golf
 
 import android.app.Application
-import android.graphics.RectF
 import android.util.Log
-import android.view.Gravity
-import androidx.compose.runtime.Composable
 import androidx.lifecycle.AndroidViewModel
-import androidx.room.util.copy
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -19,11 +15,7 @@ enum class GameStatus{
 data class GameState(
     var status :GameStatus = GameStatus.FALLING,
     val ballState: BallState = BallState(velocity = Vector2(0f,0f),position = Vector2(400f,200f))
-){
-    fun toggleStatus(a : GameStatus){
-        status = a;
-    }
-}
+)
 class GameViewModel(application: Application) : AndroidViewModel(application) {
     private var prevTime = 0L
 
@@ -43,11 +35,14 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private val physicsConst = PhysicsConst()
     fun update(deltaTime : Float){
 
-        when (gameState.value.status){
-            GameStatus.FALLING -> handleFalling(deltaTime)
-            GameStatus.IN_MOTION -> handleInMotion()
-            GameStatus.ON_GROUND -> handleOnGround()
-        }
+//        when (gameState.value.status){
+//            GameStatus.FALLING -> handleFalling(deltaTime)
+//            GameStatus.IN_MOTION -> handleInMotion()
+//            GameStatus.ON_GROUND -> handleOnGround()
+//        }
+
+        handleFalling(deltaTime)
+
     }
 
     private fun handleFalling(deltaTime : Float){
@@ -58,8 +53,6 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         // Change position in relation to velocity * time
         val newPosition = bState.value.position.add(newVelocity.scale(deltaTime))
         _bState.value = BallState(velocity = newVelocity.copy(), position = newPosition.copy())
-        Log.i("abcdefg",newPosition.yPos.toString())
-
     }
 
     private fun handleOnGround (){

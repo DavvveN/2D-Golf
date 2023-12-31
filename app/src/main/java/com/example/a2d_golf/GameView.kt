@@ -37,19 +37,20 @@ import kotlinx.coroutines.delay
 fun GameView(
     viewModel: GameViewModel = viewModel(),
     levelData: LevelData = LevelData(),
+    miscConst: MiscConst = MiscConst()
 ) {
     val gameState by viewModel.gameState.collectAsState()
     val bState by viewModel.bState.collectAsState()
-    var prevTime = 0L;
+    var prevTime = 0L
 
     LaunchedEffect(Unit) {
-        delay(3000)
+
         prevTime = System.currentTimeMillis()
         while (true) {
-                val currTime = System.currentTimeMillis()
-                viewModel.update(deltaTime = (( currTime- prevTime).toFloat()) / 1000)
-                prevTime = currTime
-            delay(1000 / 60) // Delay for approximately 60 frames per second (1000 ms / 60)
+            val currTime = System.currentTimeMillis()
+            viewModel.update(deltaTime = ((currTime - prevTime).toFloat()) / 1000)
+            prevTime = currTime
+            delay((miscConst.SECONDS_IN_MILLI / miscConst.FPS).toLong()) // Delay for 60 frames per second (1000 ms / 60)
         }
     }
 
@@ -83,14 +84,14 @@ fun DisplayLevelImage(
     ) {
         /**
         Image(
-            painter = painterResource(id = R.drawable.firstmap),
-            contentScale = ContentScale.FillBounds,
-            contentDescription = null,
-            modifier = modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
+        painter = painterResource(id = R.drawable.firstmap),
+        contentScale = ContentScale.FillBounds,
+        contentDescription = null,
+        modifier = modifier
+        .fillMaxWidth()
+        .fillMaxHeight()
         )
-        **/
+         **/
         Ball(bState)
     }
 }
@@ -112,17 +113,28 @@ fun DrawOutline(level: List<Drawable>) {
         for (d in level) {
             if (d is Line) {
                 drawLine(
-                    start = Offset(x = d.xStart, y = d.yStart),
-                    end = Offset(x = d.xEnd, y = d.yEnd),
+                    start = Offset(x = d.p1.x, y = d.p1.y),
+                    end = Offset(x = d.p2.x, y = d.p2.y),
                     color = Color.Green,
                     strokeWidth = 10f
                 )
-            } else if (d is Circle) {
-                drawCircle(
-                    center = Offset(x = d.xPos, y = d.yPos),
-                    radius = d.radius.dp.toPx(),
-                    color = Color.Green
-                )
+
+                //TODO Design LEVEL
+                if (d.p1.y == d.p2.y) {
+                    drawLine(
+                        start = Offset(x = d.p1.x, y = d.p1.y + 10),
+                        end = Offset(x = d.p2.x, y = d.p2.y + 10),
+                        color = Color(0, 100, 0),
+                        strokeWidth = 10f
+                    )
+                }else if (d.p1.x == d.p2.x){
+                    drawLine(
+                        start = Offset(x = d.p1.x - 10, y = d.p1.y ),
+                        end = Offset(x = d.p2.x - 10, y = d.p2.y ),
+                        color = Color(0, 100, 0),
+                        strokeWidth = 10f
+                    )
+                }
             }
         }
 
