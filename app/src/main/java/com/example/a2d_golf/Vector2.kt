@@ -37,4 +37,16 @@ class Vector2(var xPos : Float, var yPos : Float) {
     fun copy(xPos: Float = this.xPos, yPos: Float = this.yPos): Vector2 {
         return Vector2(xPos, yPos)
     }
+
+    //this -> should be a normalised vector
+    fun reflection(incoming : Vector2) : Vector2{
+        var normal = this
+        var dotProduct = incoming.dot(normal)
+        var reflection = normal.scale(-2 * dotProduct)
+        return incoming.add(reflection)
+    }
+
+    fun dot(v : Vector2) : Float{
+        return (xPos * v.xPos) + (yPos * v.xPos)
+    }
 }

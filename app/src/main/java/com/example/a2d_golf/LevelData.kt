@@ -1,6 +1,6 @@
 package com.example.a2d_golf
 data class LevelData(
-    var firstLevel : List<Drawable> = listOf(
+    var firstLevel : List<Line> = listOf(
         Line(Point(0f, 735f), Point(565f, 735f)),
         Line(Point(565f, 735f), Point(852f, 520f)),
         Line(Point(885f,534f),Point(885f,735f)),

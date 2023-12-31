@@ -14,7 +14,8 @@ enum class GameStatus{
 
 data class GameState(
     var status :GameStatus = GameStatus.FALLING,
-    val ballState: BallState = BallState(velocity = Vector2(0f,0f),position = Vector2(400f,200f))
+    val ballState: BallState = BallState(velocity = Vector2(0f,0f),position = Vector2(400f,200f)),
+    val levelData: LevelData
 )
 class GameViewModel(application: Application) : AndroidViewModel(application) {
     private var prevTime = 0L
@@ -27,7 +28,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     // ***********************************************************************
 
 
-    private var _gameState = MutableStateFlow(GameState())
+    private var _gameState = MutableStateFlow(GameState(levelData = LevelData()))
     var gameState = this._gameState.asStateFlow()
     private var _bState = MutableStateFlow(this.gameState.value.ballState)
     var bState = _bState.asStateFlow()
@@ -52,7 +53,18 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
         // Change position in relation to velocity * time
         val newPosition = bState.value.position.add(newVelocity.scale(deltaTime))
+        ResolveCollision()
         _bState.value = BallState(velocity = newVelocity.copy(), position = newPosition.copy())
+    }
+
+    private fun ResolveCollision(){
+        for(d in gameState.value.levelData.firstLevel){
+            //Check which line share the same x value ie. which line is under the ball
+            if(d.collidesWith(bState)){
+                _bState = d.handleCollision(_bState)
+
+            }
+        }
     }
 
     private fun handleOnGround (){

@@ -5,6 +5,6 @@ data class BallState(
     var position : Vector2,
     var velocity : Vector2,
 ){
-    val RADIUS : Float = 10f
+    val RADIUS : Float = 20f
 
 }

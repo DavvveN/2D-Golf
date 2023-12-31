@@ -122,17 +122,17 @@ fun DrawOutline(level: List<Drawable>) {
                 //TODO Design LEVEL
                 if (d.p1.y == d.p2.y) {
                     drawLine(
-                        start = Offset(x = d.p1.x, y = d.p1.y + 10),
-                        end = Offset(x = d.p2.x, y = d.p2.y + 10),
+                        start = Offset(x = d.p1.x, y = d.p1.y + 20),
+                        end = Offset(x = d.p2.x, y = d.p2.y + 20),
                         color = Color(0, 100, 0),
-                        strokeWidth = 10f
+                        strokeWidth =30f
                     )
                 }else if (d.p1.x == d.p2.x){
                     drawLine(
-                        start = Offset(x = d.p1.x - 10, y = d.p1.y ),
-                        end = Offset(x = d.p2.x - 10, y = d.p2.y ),
+                        start = Offset(x = d.p1.x - 20, y = d.p1.y ),
+                        end = Offset(x = d.p2.x - 20, y = d.p2.y ),
                         color = Color(0, 100, 0),
-                        strokeWidth = 10f
+                        strokeWidth =30f
                     )
                 }
             }
