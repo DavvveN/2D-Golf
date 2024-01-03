@@ -53,15 +53,15 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
         // Change position in relation to velocity * time
         val newPosition = bState.value.position.add(newVelocity.scale(deltaTime))
-        ResolveCollision()
         _bState.value = BallState(velocity = newVelocity.copy(), position = newPosition.copy())
+        ResolveCollision()
     }
 
     private fun ResolveCollision(){
         for(d in gameState.value.levelData.firstLevel){
             //Check which line share the same x value ie. which line is under the ball
             if(d.collidesWith(bState)){
-                _bState = d.handleCollision(_bState)
+                _bState.value = d.handleCollision(_bState).value
 
             }
         }

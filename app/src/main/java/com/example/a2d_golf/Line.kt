@@ -9,14 +9,14 @@ class Line( val p1 : Point, val p2 : Point) : Drawable {
     private val dy = p1.y - p1.y
     private val physicsConst = PhysicsConst()
 
-    val k = if (dx != 0f) dy/dx else 0f
-    val m = p1.y - (k * p1.x)
+    private val k = if (dx != 0f) dy/dx else 0f
+    private val m = p1.y - (k * p1.x)
 
-    var normal = Vector2(-dy,dx).normalize()
+    private var normal = Vector2(-dy,dx).normalize()
     override fun handleCollision(_bState: MutableStateFlow<BallState>) : MutableStateFlow<BallState> {
         _bState.value.position.yPos = intersectPointY(_bState.value.position.xPos)
         //_bState.value.velocity = normal.reflection(_bState.value.velocity.scale(physicsConst.BOUNCE_FACTOR))
-        _bState.value.velocity = _bState.value.velocity.scale(-1f)
+        _bState.value.velocity = _bState.value.velocity.scale(-0.8f)
         return MutableStateFlow(BallState(_bState.value.position, _bState.value.velocity))
     }
 

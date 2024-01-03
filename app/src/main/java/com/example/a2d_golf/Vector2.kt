@@ -42,7 +42,7 @@ class Vector2(var xPos : Float, var yPos : Float) {
     fun reflection(incoming : Vector2) : Vector2{
         var normal = this
         var dotProduct = incoming.dot(normal)
-        var reflection = normal.scale(-2 * dotProduct)
+        var reflection = normal.scale((-2f) * dotProduct)
         return incoming.add(reflection)
     }
 
