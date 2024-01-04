@@ -1,5 +1,6 @@
 package com.example.a2d_golf
 
+import android.util.Log
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -40,13 +41,13 @@ class Vector2(var xPos : Float, var yPos : Float) {
 
     //this -> should be a normalised vector
     fun reflection(incoming : Vector2) : Vector2{
-        var normal = this
-        var dotProduct = incoming.dot(normal)
-        var reflection = normal.scale((-2f) * dotProduct)
+        val normal = this
+        val dotProduct = incoming.dot(normal)
+        val reflection = normal.scale((-2f) * dotProduct)
         return incoming.add(reflection)
     }
 
-    fun dot(v : Vector2) : Float{
-        return (xPos * v.xPos) + (yPos * v.xPos)
+    private fun dot(v : Vector2) : Float{
+        return ((xPos * v.xPos) + (yPos * v.yPos))
     }
 }
