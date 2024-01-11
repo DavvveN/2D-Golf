@@ -1,5 +1,6 @@
-package com.example.a2d_golf
+package com.example.a2d_golf.userinterface
 
+import com.example.a2d_golf.BallState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 

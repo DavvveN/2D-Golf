@@ -1,7 +1,11 @@
 package com.example.a2d_golf
+
+import com.example.a2d_golf.userinterface.Line
+import com.example.a2d_golf.userinterface.Point
+
 data class LevelData(
     var firstLevel : List<Line> = listOf(
-        Line(Point(0f, 735f), Point(565f, 600f)),
+        Line(Point(0f, 735f), Point(565f, 735f)),
 //        Line(Point(565f, 735f), Point(852f, 520f)),
 //        Line(Point(885f,534f),Point(885f,735f)),
 //        Line(Point(885f,735f),Point(1176f,735f)),

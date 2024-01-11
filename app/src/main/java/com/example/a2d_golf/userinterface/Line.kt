@@ -1,10 +1,12 @@
-package com.example.a2d_golf
+package com.example.a2d_golf.userinterface
 
-import android.util.Log
+import com.example.a2d_golf.BallState
+import com.example.a2d_golf.consts.PhysicsConst
+import com.example.a2d_golf.Vector2
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class Line( val p1 : Point, val p2 : Point) : Drawable {
+class Line(val p1 : Point, val p2 : Point) : Drawable {
     private val dx = p2.x- p1.x
     private val dy = p2.y - p1.y
     private val physicsConst = PhysicsConst()
@@ -21,7 +23,6 @@ class Line( val p1 : Point, val p2 : Point) : Drawable {
 
     override fun collidesWith(bState: StateFlow<BallState>): Boolean {
         if(bState.value.position.xPos >= p1.x && bState.value.position.xPos <= p2.x){
-            Log.i("abcdefg", dy.toString())
             return intersectPointY(bState.value.position.xPos) <= bState.value.position.yPos
         }
         return false

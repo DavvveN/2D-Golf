@@ -3,6 +3,7 @@ package com.example.a2d_golf
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import com.example.a2d_golf.consts.PhysicsConst
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -14,24 +15,25 @@ enum class GameStatus{
 
 data class GameState(
     var status :GameStatus = GameStatus.FALLING,
-    val ballState: BallState = BallState(velocity = Vector2(0f,0f),position = Vector2(400f,200f)),
+    val ballState: BallState = BallState(velocity = Vector2(0f,0f),position = Vector2(400f,735f)),
     val levelData: LevelData
 )
 class GameViewModel(application: Application) : AndroidViewModel(application) {
-    private var prevTime = 0L
-
     //                        LEARNING KOTLIN JETPACK:
     // ***********************************************************************
     // _gameState and _bState are mutableStateFlows and thus are changeable
     // gameState and bState derive from _gameState and _bState and are read only
     // We can thus control changeability or readability in a given function
-    // ***********************************************************************
+    // ***********************************************************************a
 
 
     private var _gameState = MutableStateFlow(GameState(levelData = LevelData()))
     var gameState = this._gameState.asStateFlow()
     private var _bState = MutableStateFlow(this.gameState.value.ballState)
     var bState = _bState.asStateFlow()
+
+    private var _movementArrowState = MutableStateFlow(MovementArrowState(position = bState.value.position, orientation = Math.PI/4, display = true, ascending = true, changeOrientation = true))
+    var movementArrowState = _movementArrowState.asStateFlow()
 
     private val physicsConst = PhysicsConst()
     fun update(deltaTime : Float){
@@ -43,6 +45,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 //        }
 
         handleFalling(deltaTime)
+        orientMovementArrow(deltaTime,_movementArrowState)
 
     }
 
@@ -55,6 +58,21 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         val newPosition = bState.value.position.add(newVelocity.scale(deltaTime))
         _bState.value = BallState(velocity = newVelocity.copy(), position = newPosition.copy())
         ResolveCollision()
+    }
+
+    private fun orientMovementArrow(deltaTime : Float,_movementArrowState: MutableStateFlow<MovementArrowState>) {
+        if(_movementArrowState.value.ascending){
+            _movementArrowState.value.orientation = (_movementArrowState.value.orientation + deltaTime)
+            if(_movementArrowState.value.orientation > (Math.PI /2 )){
+                _movementArrowState.value.ascending = false
+            }
+        }else{
+            _movementArrowState.value.orientation = (_movementArrowState.value.orientation - deltaTime)
+
+            if(_movementArrowState.value.orientation < 0.1){
+                _movementArrowState.value.ascending = true
+            }
+        }
     }
 
     private fun ResolveCollision(){

@@ -9,12 +9,12 @@ class Vector2(var xPos : Float, var yPos : Float) {
         val DOWN : Vector2 = Vector2(0f,-1f)
         val UP : Vector2 = Vector2(0f,1f)
         val LEFT : Vector2 = Vector2(-1f,0f)
-        val RIGHT : Vector2 = Vector2(0f,0f)
+        val RIGHT : Vector2 = Vector2(1f,0f)
         val EMPTY : Vector2 = Vector2(0f,0f)
     }
 
     //FUNCTION TO CALCULATE MAGNITUDE OF A VECTOR
-    fun magnitude() : Float{
+    private fun magnitude() : Float{
         return sqrt(xPos.toDouble().pow(2.0) + yPos.toDouble().pow(2.0)).toFloat()
     }
 

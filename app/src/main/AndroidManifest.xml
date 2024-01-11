@@ -13,7 +13,7 @@
         android:theme="@style/Theme._2DGolf"
         tools:targetApi="34">
         <activity
-            android:name=".MainActivity"
+            android:name=".userinterface.MainActivity"
             android:screenOrientation="landscape"
             android:exported="true"
             android:label="@string/app_name"
