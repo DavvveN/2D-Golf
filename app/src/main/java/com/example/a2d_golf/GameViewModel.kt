@@ -2,6 +2,7 @@ package com.example.a2d_golf
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.ui.graphics.Path
 import androidx.lifecycle.AndroidViewModel
 import com.example.a2d_golf.consts.PhysicsConst
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,7 @@ enum class GameStatus{
 
 data class GameState(
     var status :GameStatus = GameStatus.FALLING,
-    val ballState: BallState = BallState(velocity = Vector2(0f,0f),position = Vector2(400f,735f)),
+    val ballState: BallState = BallState(velocity = Vector2(0f,0f),position = Vector2(400f,600f)),
     val levelData: LevelData
 )
 class GameViewModel(application: Application) : AndroidViewModel(application) {
@@ -32,21 +33,14 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private var _bState = MutableStateFlow(this.gameState.value.ballState)
     var bState = _bState.asStateFlow()
 
-    private var _movementArrowState = MutableStateFlow(MovementArrowState(position = bState.value.position, orientation = Math.PI/4, display = true, ascending = true, changeOrientation = true))
+    private var _movementArrowState = MutableStateFlow(MovementArrowState(position = bState.value.position, display = true, ascending = true, changeOrientation = true, bState = this.bState, physicsConst = PhysicsConst(),path = Path()))
     var movementArrowState = _movementArrowState.asStateFlow()
 
     private val physicsConst = PhysicsConst()
     fun update(deltaTime : Float){
 
-//        when (gameState.value.status){
-//            GameStatus.FALLING -> handleFalling(deltaTime)
-//            GameStatus.IN_MOTION -> handleInMotion()
-//            GameStatus.ON_GROUND -> handleOnGround()
-//        }
-
         handleFalling(deltaTime)
-        orientMovementArrow(deltaTime,_movementArrowState)
-
+        //orientMovementArrow(deltaTime,_movementArrowState)
     }
 
     private fun handleFalling(deltaTime : Float){
@@ -60,36 +54,13 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         ResolveCollision()
     }
 
-    private fun orientMovementArrow(deltaTime : Float,_movementArrowState: MutableStateFlow<MovementArrowState>) {
-        if(_movementArrowState.value.ascending){
-            _movementArrowState.value.orientation = (_movementArrowState.value.orientation + deltaTime)
-            if(_movementArrowState.value.orientation > (Math.PI /2 )){
-                _movementArrowState.value.ascending = false
-            }
-        }else{
-            _movementArrowState.value.orientation = (_movementArrowState.value.orientation - deltaTime)
-
-            if(_movementArrowState.value.orientation < 0.1){
-                _movementArrowState.value.ascending = true
-            }
-        }
-    }
-
     private fun ResolveCollision(){
         for(d in gameState.value.levelData.firstLevel){
             //Check which line share the same x value ie. which line is under the ball
             if(d.collidesWith(bState)){
                 _bState.value = d.handleCollision(_bState).value
-
             }
         }
     }
 
-    private fun handleOnGround (){
-
-    }
-
-    private fun handleInMotion(){
-
-    }
 }

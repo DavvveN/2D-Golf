@@ -14,7 +14,7 @@ class Vector2(var xPos : Float, var yPos : Float) {
     }
 
     //FUNCTION TO CALCULATE MAGNITUDE OF A VECTOR
-    private fun magnitude() : Float{
+    fun magnitude() : Float{
         return sqrt(xPos.toDouble().pow(2.0) + yPos.toDouble().pow(2.0)).toFloat()
     }
 
