@@ -18,7 +18,7 @@ class Line(val p1 : Point, val p2 : Point) : Drawable {
     override fun handleCollision(_bState: MutableStateFlow<BallState>) : MutableStateFlow<BallState> {
         val newY = intersectPointY(_bState.value.position.xPos)
         val newV = normal.reflection(_bState.value.velocity.scale(physicsConst.BOUNCE_FACTOR))
-        return MutableStateFlow(BallState(Vector2(_bState.value.position.xPos,newY),newV))
+        return MutableStateFlow(BallState(Vector2(_bState.value.position.xPos,newY),newV, userForce = _bState.value.userForce))
     }
 
     override fun collidesWith(bState: StateFlow<BallState>): Boolean {

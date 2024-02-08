@@ -16,7 +16,7 @@ enum class GameStatus{
 
 data class GameState(
     var status :GameStatus = GameStatus.FALLING,
-    val ballState: BallState = BallState(velocity = Vector2(0f,0f),position = Vector2(400f,600f)),
+    val ballState: BallState = BallState(velocity = Vector2(0f,0f),position = Vector2(400f,600f), userForce = Vector2(0f,0f)),
     val levelData: LevelData
 )
 class GameViewModel(application: Application) : AndroidViewModel(application) {
@@ -33,7 +33,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private var _bState = MutableStateFlow(this.gameState.value.ballState)
     var bState = _bState.asStateFlow()
 
-    private var _movementArrowState = MutableStateFlow(MovementArrowState(position = bState.value.position, display = true, ascending = true, changeOrientation = true, bState = this.bState, physicsConst = PhysicsConst(),path = Path()))
+    private var _movementArrowState = MutableStateFlow(MovementArrowState(position = bState.value.position, display = true, _bState = this._bState, physicsConst = PhysicsConst()))
     var movementArrowState = _movementArrowState.asStateFlow()
 
     private val physicsConst = PhysicsConst()
@@ -48,9 +48,15 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         val gravityForce = Vector2.VectorConst.UP.scale(physicsConst.GRAVITY)
         val newVelocity = bState.value.velocity.add(gravityForce.scale(deltaTime))
 
+        //TODO CHECK DIRECTION OF USER VECTOR
+        val uF = bState.value.userForce.scale(physicsConst.USERFACTOR).scale(deltaTime)
+
+        newVelocity.add(uF)
+        _bState.value.userForce = Vector2.VectorConst.EMPTY
+
         // Change position in relation to velocity * time
         val newPosition = bState.value.position.add(newVelocity.scale(deltaTime))
-        _bState.value = BallState(velocity = newVelocity.copy(), position = newPosition.copy())
+        _bState.value = BallState(velocity = newVelocity.copy(), position = newPosition.copy(), userForce = bState.value.userForce)
         ResolveCollision()
     }
 

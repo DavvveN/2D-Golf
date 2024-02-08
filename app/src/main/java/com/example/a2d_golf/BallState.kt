@@ -4,6 +4,7 @@ import android.graphics.RectF
 data class BallState(
     var position : Vector2,
     var velocity : Vector2,
+    var userForce : Vector2
 ){
     val RADIUS : Float = 20f
 
