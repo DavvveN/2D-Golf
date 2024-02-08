@@ -12,7 +12,9 @@ import androidx.compose.ui.input.pointer.pointerInput
 import com.example.a2d_golf.MovementArrowState
 import com.example.a2d_golf.Vector2
 import android.graphics.Paint
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.drawscope.Stroke
 
 @Composable
 fun MovementArrow(modifier : Modifier,arrowState : MovementArrowState ){
@@ -24,8 +26,11 @@ fun MovementArrow(modifier : Modifier,arrowState : MovementArrowState ){
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .pointerInput(Unit){
-                detectTapGestures { offset ->  arrowState.interaction(Vector2(offset.x, offset.y))}
+            .pointerInput(Unit) {
+                detectDragGestures{ change, dragAmount ->
+                    change.consume()
+                    arrowState.interaction(arrowState.position.sub(Vector2(dragAmount.x,dragAmount.y)))
+                }
             }
         ){
         Canvas(modifier = Modifier.fillMaxSize()) {
@@ -34,10 +39,6 @@ fun MovementArrow(modifier : Modifier,arrowState : MovementArrowState ){
                 end = Offset(x = arrowState.position.xPos, y = arrowState.position.yPos),
                 color = Color(255, 255, 255),
                 strokeWidth = 30f
-            )
-            drawPath(
-                path = arrowState.path,
-                color = Color.Black
             )
         }
     }

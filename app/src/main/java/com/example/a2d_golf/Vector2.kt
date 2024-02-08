@@ -28,12 +28,18 @@ class Vector2(var xPos : Float, var yPos : Float) {
         return Vector2(xPos * factor,yPos * factor )
     }
 
-    //PARAMETER : LIST allowing addition of multiple vectors
     fun add(v : Vector2) : Vector2{
             xPos += v.xPos
             yPos += v.yPos
         return Vector2(xPos,yPos)
     }
+
+    fun sub(v : Vector2) : Vector2{
+        xPos -= v.xPos
+        yPos -= v.yPos
+        return Vector2(xPos,yPos)
+    }
+
 
     fun copy(xPos: Float = this.xPos, yPos: Float = this.yPos): Vector2 {
         return Vector2(xPos, yPos)
