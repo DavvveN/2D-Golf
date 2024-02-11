@@ -16,7 +16,7 @@ data class MovementArrowState(
     }
 
     fun launchBall(){
-        _bState.value.userForce = position
+        _bState.value.userForce = position.sub(_bState.value.position)
         display = false
     }
 }

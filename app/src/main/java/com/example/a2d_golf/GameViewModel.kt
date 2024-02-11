@@ -50,6 +50,11 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
         //TODO CHECK DIRECTION OF USER VECTOR
         val uF = bState.value.userForce.scale(physicsConst.USERFACTOR).scale(deltaTime)
+        if(uF.xPos != 0f ||uF.yPos != 0f){
+        Log.i("abcdefx",uF.yPos.toString())
+        Log.i("abcdefy",uF.yPos.toString())
+        }
+
 
         newVelocity.add(uF)
         _bState.value.userForce = Vector2.VectorConst.EMPTY
