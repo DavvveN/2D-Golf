@@ -24,7 +24,7 @@ fun GameView(
 
     when(gameState.status){
         GameStatus.START -> {
-            StartPage(modifier = Modifier, viewModel._gameState)
+            StartPage(modifier = Modifier, viewModel)
         }
         GameStatus.GAME -> {
             LaunchedEffect(Unit) {

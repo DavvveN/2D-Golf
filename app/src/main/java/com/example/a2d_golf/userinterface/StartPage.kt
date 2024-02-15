@@ -29,11 +29,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import com.example.a2d_golf.GameState
 import com.example.a2d_golf.GameStatus
+import com.example.a2d_golf.GameViewModel
 import com.example.a2d_golf.R
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
-fun StartPage(modifier: Modifier, gameState: MutableStateFlow<GameState>) {
+fun StartPage(modifier: Modifier, viewModel : GameViewModel) {
     val offset = Offset(1.0f, 6.0f)
 
     val infiniteTransition = rememberInfiniteTransition(label = "")
@@ -51,7 +52,7 @@ fun StartPage(modifier: Modifier, gameState: MutableStateFlow<GameState>) {
             .fillMaxSize()
             .pointerInput(Unit) {
                 detectTapGestures {
-                    gameState.value.status = GameStatus.GAME
+                    viewModel.startGame()
                 }
             }
     ) {

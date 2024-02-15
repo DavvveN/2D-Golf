@@ -32,6 +32,10 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         handleFalling(deltaTime)
     }
 
+    fun startGame(){
+        _gameState.value = gameState.value.copy(status = GameStatus.GAME)
+    }
+
     private fun handleFalling(deltaTime : Float){
 
         val gravityForce = Vector2.VectorConst.UP.scale(physicsConst.GRAVITY)
