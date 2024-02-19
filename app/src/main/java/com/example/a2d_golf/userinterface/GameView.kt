@@ -43,6 +43,11 @@ fun GameView(
             DrawMap(levelData.firstLevel)
             MovementArrow(modifier = Modifier, arrowState = arrowModel)
             Ball(modifier = Modifier, ballState = bState)
+            SettingButton(viewModel = viewModel)
+
+        }
+        GameStatus.SETTINGS -> {
+            SettingsView(viewModel = viewModel)
         }
     }
 }
