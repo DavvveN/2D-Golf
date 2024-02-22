@@ -45,6 +45,8 @@ fun GameView(
             MovementArrow(modifier = Modifier, arrowState = arrowModel)
             Ball(modifier = Modifier, ballState = bState)
             SettingButton(viewModel = viewModel)
+            BallTracer(modifier = Modifier, ballState = bState)
+
 
         }
 

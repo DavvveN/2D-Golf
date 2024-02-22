@@ -47,7 +47,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     var movementArrowState = _movementArrowState.asStateFlow()
 
     fun update(deltaTime: Float) {
-        handleFalling(deltaTime)
+        handleMovement(deltaTime)
     }
 
     fun startGame() {
@@ -59,7 +59,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     //Handles more than falling: also applies a user force
-    private fun handleFalling(deltaTime: Float) {
+    private fun handleMovement(deltaTime: Float) {
 
         val gravityForce = Vector2.VectorConst.UP.scale(physicsConst.GRAVITY)
         val newVelocity = bState.value.velocity.add(gravityForce.scale(deltaTime))
@@ -71,10 +71,20 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
         // Change position in relation to velocity * time
         val newPosition = bState.value.position.add(newVelocity.scale(deltaTime))
+        var prevPos = bState.value.prevPos
+        val pP: ArrayList<Vector2> = bState.value.prevPositions
+
+        if(bState.value.prevPos.xPos + 50f < newPosition.xPos ){
+            pP.add(newPosition)
+            prevPos = newPosition
+        }
+
         _bState.value = BallState(
             velocity = newVelocity.copy(),
             position = newPosition.copy(),
-            userForce = bState.value.userForce
+            userForce = bState.value.userForce,
+            prevPos = prevPos,
+            prevPositions = pP
         )
         ResolveCollision()
     }
