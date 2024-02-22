@@ -20,12 +20,13 @@ fun GameView(
     val gameState by viewModel.gameState.collectAsState()
     val bState by viewModel.bState.collectAsState()
     val arrowModel by viewModel.movementArrowState.collectAsState()
-    var prevTime : Long
+    var prevTime: Long
 
-    when(gameState.status){
+    when (gameState.status) {
         GameStatus.START -> {
             StartPage(modifier = Modifier, viewModel)
         }
+
         GameStatus.GAME -> {
             LaunchedEffect(Unit) {
 
@@ -46,6 +47,7 @@ fun GameView(
             SettingButton(viewModel = viewModel)
 
         }
+
         GameStatus.SETTINGS -> {
             SettingsView(viewModel = viewModel)
         }
