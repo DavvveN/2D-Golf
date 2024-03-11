@@ -1,5 +1,6 @@
 package com.example.a2d_golf.userinterface
 
+import android.util.Log
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

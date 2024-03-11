@@ -1,8 +1,11 @@
 package com.example.a2d_golf
 
 import android.app.Application
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.AndroidViewModel
+import com.example.a2d_golf.consts.MiscConst
 import com.example.a2d_golf.consts.PhysicsConst
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -33,6 +36,8 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     var bState = _bState.asStateFlow()
     var _settingState = MutableStateFlow(SettingsState())
     var settingsState = _settingState.asStateFlow()
+    val miscConst: MiscConst = MiscConst()
+
 
     private val physicsConst = PhysicsConst()
 
@@ -74,7 +79,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         var prevPos = bState.value.prevPos
         val pP: ArrayList<Vector2> = bState.value.prevPositions
 
-        if(bState.value.prevPos.xPos + 50f < newPosition.xPos ){
+        if(bState.value.prevPos.xPos + miscConst.DISTANCE_BETWEEN_BALLS < newPosition.xPos ){
             pP.add(newPosition)
             prevPos = newPosition
         }
