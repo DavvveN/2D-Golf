@@ -12,13 +12,17 @@ import androidx.compose.ui.input.pointer.pointerInput
 import com.example.a2d_golf.MovementArrowState
 import com.example.a2d_golf.Vector2
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.drawscope.draw
+import com.example.a2d_golf.BallState
 import com.example.a2d_golf.consts.MiscConst
 import com.example.a2d_golf.consts.PhysicsConst
-import kotlinx.coroutines.delay
 import kotlin.math.abs
-import kotlin.math.round
+import kotlin.math.max
+import kotlin.math.min
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.drawscope.Stroke
 
 @Composable
 fun MovementArrow(modifier : Modifier,arrowState : MovementArrowState ){
@@ -46,45 +50,40 @@ fun MovementArrow(modifier : Modifier,arrowState : MovementArrowState ){
         ){
         if(arrowState.display){
             val bState = arrowState._bState.collectAsState()
-            val miscConst: MiscConst = MiscConst()
-            val amountDisplayBalls = round(abs(arrowState.position.xPos - bState.value.position.xPos) / miscConst.DISTANCE_BETWEEN_BALLS)
-            val prevPositions: ArrayList<Vector2> = arrayListOf()
-            val physicsConst: PhysicsConst = PhysicsConst()
+//
+            val path = Path()
+            path.moveTo(bState.value.position.xPos, bState.value.position.yPos)
+            val x1 = bState.value.position.xPos + (arrowState.position.xPos - bState.value.position.xPos) / 2
+            val y1 = arrowState.position.yPos
+            path.quadraticBezierTo(x1,y1,arrowState.position.xPos, arrowState.position.yPos)
 
-            var userForce = arrowState.position.sub(bState.value.position)
+            // Create a rectangle that covers the area underneath the curve
+            val rect = Rect(
+                left = min(bState.value.position.xPos, arrowState.position.xPos),
+                top = min(bState.value.position.yPos, arrowState.position.yPos),
+                right = max(bState.value.position.xPos, arrowState.position.xPos),
+                bottom = max(bState.value.position.yPos, arrowState.position.yPos)
+            )
 
-            //temp bState (not a state)
-            val newBState = bState.value.copy()
-
-            //Simulates the ball trajectory for the 6 next ball position
-            while(prevPositions.size < amountDisplayBalls){
-                val deltaTime = 1f
-
-                val gravityForce = Vector2.VectorConst.UP.scale(physicsConst.GRAVITY)
-                val newVelocity = newBState.velocity.add(gravityForce.scale(deltaTime))
-
-                val uF = userForce.scale(physicsConst.USERFACTOR).scale(deltaTime)
-                newVelocity.add(uF)
-
-                userForce = Vector2.VectorConst.EMPTY
-
-                val newPosition = newBState.position.add(newVelocity.scale(deltaTime))
-
-                if(newBState.prevPos.xPos + miscConst.DISTANCE_BETWEEN_BALLS < newPosition.xPos ){
-                    prevPositions.add(newPosition)
-                    newBState.prevPos = newPosition
-                }
-
-
+            val path2 = Path().apply {
+                addRect(rect)
             }
 
+
+            // Subtract the area underneath the curve from the path
+            val nP = Path()
+            nP.op(path, path2 ,PathOperation.Difference)
+
+
             Canvas(modifier = Modifier.fillMaxSize()) {
-                drawLine(
-                    start = Offset(x = arrowState._bState.value.position.xPos, y = arrowState._bState.value.position.yPos),
-                    end = Offset(x = arrowState.position.xPos, y = arrowState.position.yPos),
-                    color = Color(255, 255, 255),
-                    strokeWidth = 30f
+
+                drawPath(
+                    path = path,
+                    color = Color.Cyan,
+                    style = Stroke(width = 30f)
+
                 )
+
             }
         }
     }

@@ -10,5 +10,6 @@ data class BallState(
     val prevPositions: ArrayList<Vector2> = arrayListOf()
 ) {
     val RADIUS: Float = 20f
+    constructor(other : BallState) : this(other.position.copy(), other.velocity.copy(), other.userForce.copy())
 
 }
