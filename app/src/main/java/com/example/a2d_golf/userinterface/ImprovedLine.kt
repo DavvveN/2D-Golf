@@ -6,7 +6,7 @@ import com.example.a2d_golf.Vector2
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class Line(val p1 : Point, val p2 : Point) : Drawable {
+class ImprovedLine(val p1 : Point, val p2 : Point, val p3 : Point) : Drawable {
     private val dx = p2.x- p1.x
     private val dy = p2.y - p1.y
     private val physicsConst = PhysicsConst()

@@ -1,15 +1,18 @@
 package com.example.a2d_golf.userinterface
 
-import android.util.Log
+import androidx.compose.foundation.layout.Row
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Path
 import com.example.a2d_golf.*
 import com.example.a2d_golf.consts.MiscConst
 import kotlinx.coroutines.delay
+
 
 
 @Composable
@@ -40,13 +43,20 @@ fun GameView(
                 }
             }
 
+            Point(565f, 600f)
+            Point(852f, 520f)
+
+            val path = Path()
+            path.moveTo(565f, 600f)
+            path.quadraticBezierTo(852f,600f,852f,520f)
+
             //Draw out components
             Background()
-            DrawMap(levelData.firstLevel)
+            DrawMap(levelData.firstLevel, path = path)
             MovementArrow(modifier = Modifier, arrowState = arrowModel)
             Ball(modifier = Modifier, ballState = bState)
-            SettingButton(viewModel = viewModel)
             BallTracer(modifier = Modifier, ballState = bState)
+            SettingButton(viewModel = viewModel)
 
 
         }

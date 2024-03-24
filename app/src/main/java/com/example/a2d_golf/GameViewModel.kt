@@ -55,6 +55,21 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         handleMovement(deltaTime)
     }
 
+    fun restart() {
+        _bState.value = bState.value.copy(
+            velocity = Vector2(0f, 0f),
+            position = Vector2(400f, 600f),
+            userForce = Vector2(0f, 0f)
+        )
+
+        _movementArrowState.value = movementArrowState.value.copy(
+            display = true,
+            position = bState.value.position
+        )
+
+        startGame()
+    }
+
     fun startGame() {
         _gameState.value = gameState.value.copy(status = GameStatus.GAME)
     }
@@ -79,7 +94,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         var prevPos = bState.value.prevPos
         val pP: ArrayList<Vector2> = bState.value.prevPositions
 
-        if(bState.value.prevPos.xPos + miscConst.DISTANCE_BETWEEN_BALLS < newPosition.xPos ){
+        if (bState.value.prevPos.xPos + miscConst.DISTANCE_BETWEEN_BALLS < newPosition.xPos) {
             pP.add(newPosition)
             prevPos = newPosition
         }

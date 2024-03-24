@@ -62,6 +62,13 @@ fun SettingsView(viewModel: GameViewModel) {
             ) {
                 Text("CONTINUE")
             }
+            Button(
+                onClick = {
+                    viewModel.restart()
+                }
+            ){
+                Text("Restart")
+            }
             //MediaPlayerComponent()
 
         }
