@@ -16,10 +16,14 @@ class Line(val p1 : Point, val p2 : Point) : Drawable {
 
     //TODO Normal vector should change in some instances to (-dy,dx)
     private var normal = Vector2(dy,-dx).normalize()
-    override fun handleCollision(_bState: MutableStateFlow<BallState>) : MutableStateFlow<BallState> {
+     fun handleCollision(_bState: MutableStateFlow<BallState>) : MutableStateFlow<BallState> {
         val newY = intersectPointY(_bState.value.position.xPos)
         val newV = normal.reflection(_bState.value.velocity.scale(physicsConst.BOUNCE_FACTOR))
-        return MutableStateFlow(BallState(Vector2(_bState.value.position.xPos,newY),newV, userForce = _bState.value.userForce))
+        return MutableStateFlow(BallState(Vector2(_bState.value.position.xPos,newY),newV, userForce = _bState.value.userForce, prevPositions = _bState.value.prevPositions))
+    }
+
+    override fun getStartPointAsVector() : Vector2{
+        return Vector2(p1.x + 200f , p1.y)
     }
 
     override fun collidesWith(bState: StateFlow<BallState>): Boolean {

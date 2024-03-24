@@ -5,14 +5,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
+
 
 @Composable
-fun DrawMap(level: List<Drawable>, path: Path) {
+fun DrawMap(level: List<Drawable>) {
     Canvas(modifier = Modifier.fillMaxSize()) {
         for (d in level) {
             if (d is Line) {
@@ -23,7 +21,6 @@ fun DrawMap(level: List<Drawable>, path: Path) {
                     strokeWidth = 10f
                 )
 
-                //TODO Design LEVEL
                 if (d.p1.y == d.p2.y) {
                     drawLine(
                         start = Offset(x = d.p1.x, y = d.p1.y + 20),
@@ -40,14 +37,16 @@ fun DrawMap(level: List<Drawable>, path: Path) {
                     )
                 }
             }
+            if(d is Goal){
+                val w = d.p2.x - d.p1.x
+                val h = 200f
+                drawRect(
+                    color = Color(red = 144,green = 238, blue = 144, alpha = 128),
+                    topLeft = Offset(d.p1.x,d.p1.y),
+                    size = Size(w,h)
+                )
+            }
         }
-
-        drawPath(
-            path = path,
-            color = Color.Cyan,
-            style = Stroke(width = 30f)
-
-        )
 
     }
 }

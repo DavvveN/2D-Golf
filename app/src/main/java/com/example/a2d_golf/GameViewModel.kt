@@ -1,28 +1,25 @@
 package com.example.a2d_golf
 
 import android.app.Application
-import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.AndroidViewModel
 import com.example.a2d_golf.consts.MiscConst
 import com.example.a2d_golf.consts.PhysicsConst
-import kotlinx.coroutines.delay
+import com.example.a2d_golf.userinterface.Goal
+import com.example.a2d_golf.userinterface.Line
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 enum class GameStatus {
     START,
     GAME,
-    SETTINGS
+    SETTINGS,
+    LEVELS
 }
 
 data class GameState(
     var status: GameStatus = GameStatus.START,
-    val ballState: BallState = BallState(
-        velocity = Vector2(0f, 0f),
-        position = Vector2(400f, 600f),
-        userForce = Vector2(0f, 0f)
-    ),
-    val levelData: LevelData
+    val levelData: LevelData,
+    var currentLevel: Int = 1
 )
 
 data class SettingsState(
@@ -32,14 +29,20 @@ data class SettingsState(
 class GameViewModel(application: Application) : AndroidViewModel(application) {
     var _gameState = MutableStateFlow(GameState(levelData = LevelData()))
     var gameState = this._gameState.asStateFlow()
-    private var _bState = MutableStateFlow(this.gameState.value.ballState)
+    private var _bState = MutableStateFlow(
+        BallState(
+            velocity = Vector2(0f, 0f),
+            position = gameState.value.levelData.levels.get(gameState.value.currentLevel).get(0).getStartPointAsVector(),
+            userForce = Vector2(0f, 0f)
+        )
+    )
     var bState = _bState.asStateFlow()
     var _settingState = MutableStateFlow(SettingsState())
     var settingsState = _settingState.asStateFlow()
-    val miscConst: MiscConst = MiscConst()
-
 
     private val physicsConst = PhysicsConst()
+
+    var showVictoryScreen : Boolean = false
 
     private var _movementArrowState = MutableStateFlow(
         MovementArrowState(
@@ -58,20 +61,30 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     fun restart() {
         _bState.value = bState.value.copy(
             velocity = Vector2(0f, 0f),
-            position = Vector2(400f, 600f),
-            userForce = Vector2(0f, 0f)
+            position = gameState.value.levelData.levels.get(gameState.value.currentLevel).get(0).getStartPointAsVector(),
+            userForce = Vector2(0f, 0f),
+            prevPositions = arrayListOf()
         )
 
         _movementArrowState.value = movementArrowState.value.copy(
             display = true,
-            position = bState.value.position
+            position = bState.value.position,
+            _bState = _bState
         )
 
         startGame()
     }
 
+    fun victoryScreen(t : Boolean){
+        showVictoryScreen = t
+    }
+
     fun startGame() {
         _gameState.value = gameState.value.copy(status = GameStatus.GAME)
+    }
+
+    fun levelView() {
+        _gameState.value = gameState.value.copy(status = GameStatus.LEVELS)
     }
 
     fun showSettings() {
@@ -94,7 +107,10 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         var prevPos = bState.value.prevPos
         val pP: ArrayList<Vector2> = bState.value.prevPositions
 
-        if (bState.value.prevPos.xPos + miscConst.DISTANCE_BETWEEN_BALLS < newPosition.xPos) {
+        //IF THE BALL IS AT THE NEXT INTERVAL TO ADD ANOTHER DOT AND IS GOING IN THAT DIRECTION
+        if ((bState.value.prevPos.xPos + MiscConst().DISTANCE_BETWEEN_BALLS < newPosition.xPos && bState.value.velocity.xPos > 0)
+            || (bState.value.prevPos.xPos - MiscConst().DISTANCE_BETWEEN_BALLS > newPosition.xPos && bState.value.velocity.xPos < 0)
+        ) {
             pP.add(newPosition)
             prevPos = newPosition
         }
@@ -111,10 +127,15 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     //Detects and resolves collisions
     private fun ResolveCollision() {
-        for (d in gameState.value.levelData.firstLevel) {
+        val level = gameState.value.levelData.levels.get(gameState.value.currentLevel)
+        for (d in level) {
             //Check which line share the same x value ie. which line is under the ball
             if (d.collidesWith(bState)) {
-                _bState.value = d.handleCollision(_bState).value
+                if (d is Line) {
+                    _bState.value = d.handleCollision(_bState).value
+                } else if (d is Goal) {
+                    levelView()
+                }
 
                 //TODO SOUND EFFECT IF DISPLAY = OFF
             }

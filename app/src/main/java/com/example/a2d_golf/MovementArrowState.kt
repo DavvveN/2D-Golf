@@ -1,9 +1,7 @@
 package com.example.a2d_golf
 
-import android.util.Log
 import com.example.a2d_golf.consts.PhysicsConst
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 data class MovementArrowState(
     var position: Vector2,

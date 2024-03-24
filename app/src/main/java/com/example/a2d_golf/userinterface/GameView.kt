@@ -43,27 +43,26 @@ fun GameView(
                 }
             }
 
-            Point(565f, 600f)
-            Point(852f, 520f)
-
-            val path = Path()
-            path.moveTo(565f, 600f)
-            path.quadraticBezierTo(852f,600f,852f,520f)
-
             //Draw out components
             Background()
-            DrawMap(levelData.firstLevel, path = path)
+            DrawMap(levelData.levels.get(gameState.currentLevel))
             MovementArrow(modifier = Modifier, arrowState = arrowModel)
             Ball(modifier = Modifier, ballState = bState)
             BallTracer(modifier = Modifier, ballState = bState)
             SettingButton(viewModel = viewModel)
+            Flag(viewModel = viewModel, gameState = gameState)
 
+            if(viewModel.showVictoryScreen){
 
+            }
         }
 
         GameStatus.SETTINGS -> {
             SettingsView(viewModel = viewModel)
         }
+        
+        GameStatus.LEVELS -> {
+            LevelSelectorView(viewModel = viewModel)
+        }
     }
 }
-

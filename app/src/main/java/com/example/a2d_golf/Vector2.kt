@@ -40,7 +40,6 @@ class Vector2(var xPos : Float, var yPos : Float) {
         return Vector2(xPos,yPos)
     }
 
-
     fun copy(xPos: Float = this.xPos, yPos: Float = this.yPos): Vector2 {
         return Vector2(xPos, yPos)
     }

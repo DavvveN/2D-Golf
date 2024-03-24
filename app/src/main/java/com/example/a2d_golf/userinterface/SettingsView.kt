@@ -26,7 +26,6 @@ import com.example.a2d_golf.R
 
 @Composable
 fun SettingsView(viewModel: GameViewModel) {
-    val m = LocalContext.current
     val sS = viewModel._settingState.collectAsState()
     Box(
         modifier = Modifier
@@ -69,42 +68,16 @@ fun SettingsView(viewModel: GameViewModel) {
             ){
                 Text("Restart")
             }
-            //MediaPlayerComponent()
 
-        }
-    }
-}
-
-@Composable
-fun MediaPlayerComponent() {
-    var mediaPlayer by remember { mutableStateOf<MediaPlayer?>(null) }
-    val m = LocalContext.current
-
-    DisposableEffect(Unit) {
-        mediaPlayer = MediaPlayer.create(m, R.raw.ball_bounce)
-        mediaPlayer?.setOnPreparedListener {}
-
-        mediaPlayer?.setOnErrorListener { _, _, _ ->
-            // Handle errors here
-            true
-        }
-        mediaPlayer?.prepareAsync()
-
-        onDispose {
-            try {
-                mediaPlayer?.release()
-            } catch (e: Exception) {
-                // Handle exceptions during release
-                e.printStackTrace()
+            Button(
+                onClick = {
+                    viewModel.levelView()
+                }
+            ){
+                Text("LEVELS")
             }
-        }
-    }
 
-    Button(
-        onClick = {
-            mediaPlayer?.start()
+
         }
-    ) {
-        Text("PLAY")
     }
 }
