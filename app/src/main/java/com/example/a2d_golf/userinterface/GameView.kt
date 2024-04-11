@@ -52,8 +52,8 @@ fun GameView(
             SettingButton(viewModel = viewModel)
             Flag(viewModel = viewModel, gameState = gameState)
 
-            if(viewModel.showVictoryScreen){
-
+            if(gameState.promptRestart){
+                PromptRestart(viewModel = viewModel)
             }
         }
 

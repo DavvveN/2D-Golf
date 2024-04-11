@@ -22,11 +22,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.a2d_golf.GameViewModel
 import com.example.a2d_golf.R
+import com.example.a2d_golf.consts.PhysicsConst
 
 
 @Composable
 fun SettingsView(viewModel: GameViewModel) {
     val sS = viewModel._settingState.collectAsState()
+    val gS = viewModel._gameState.collectAsState()
+    if (gS.value.promptRestart) {
+        viewModel.restart()
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -54,27 +59,44 @@ fun SettingsView(viewModel: GameViewModel) {
                     valueRange = 0f..1f,
                 )
             }
+            Column(
+                modifier = Modifier.width(500.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text("USER FACTOR")
+
+                Slider(
+                    value = gS.value.userFactor,
+                    onValueChange = {
+                        it.also {
+                            viewModel._gameState.value = gS.value.copy(userFactor = it)
+                        }
+                    },
+                    steps = 20,
+                    valueRange = 100f..600f,
+                )
+            }
+
+            Button(
+                onClick = {
+                    viewModel.levelView(victory = false)
+                }
+            ) {
+                Text("LEVELS")
+            }
+            Button(
+                onClick = {
+                    viewModel.restart()
+                }
+            ) {
+                Text("Restart")
+            }
             Button(
                 onClick = {
                     viewModel.startGame()
                 }
             ) {
                 Text("CONTINUE")
-            }
-            Button(
-                onClick = {
-                    viewModel.restart()
-                }
-            ){
-                Text("Restart")
-            }
-
-            Button(
-                onClick = {
-                    viewModel.levelView()
-                }
-            ){
-                Text("LEVELS")
             }
 
 

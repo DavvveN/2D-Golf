@@ -1,6 +1,7 @@
 package com.example.a2d_golf
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.example.a2d_golf.consts.MiscConst
 import com.example.a2d_golf.consts.PhysicsConst
@@ -8,6 +9,7 @@ import com.example.a2d_golf.userinterface.Goal
 import com.example.a2d_golf.userinterface.Line
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlin.math.abs
 
 enum class GameStatus {
     START,
@@ -19,7 +21,10 @@ enum class GameStatus {
 data class GameState(
     var status: GameStatus = GameStatus.START,
     val levelData: LevelData,
-    var currentLevel: Int = 1
+    var currentLevel: Int = 1,
+    var victory : Boolean = false,
+    var promptRestart : Boolean = false,
+    var userFactor : Float = PhysicsConst().USERFACTOR
 )
 
 data class SettingsState(
@@ -41,8 +46,6 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     var settingsState = _settingState.asStateFlow()
 
     private val physicsConst = PhysicsConst()
-
-    var showVictoryScreen : Boolean = false
 
     private var _movementArrowState = MutableStateFlow(
         MovementArrowState(
@@ -75,29 +78,33 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         startGame()
     }
 
-    fun victoryScreen(t : Boolean){
-        showVictoryScreen = t
-    }
-
     fun startGame() {
-        _gameState.value = gameState.value.copy(status = GameStatus.GAME)
+        _gameState.value = gameState.value.copy(status = GameStatus.GAME, promptRestart = false)
     }
 
-    fun levelView() {
-        _gameState.value = gameState.value.copy(status = GameStatus.LEVELS)
+    fun levelView(victory : Boolean) {
+        _gameState.value = gameState.value.copy(status = GameStatus.LEVELS, victory = victory)
     }
 
     fun showSettings() {
         _gameState.value = gameState.value.copy(status = GameStatus.SETTINGS)
     }
+    fun promptRestart(){
+        _gameState.value = gameState.value.copy(promptRestart = true)
+    }
+
 
     //Handles more than falling: also applies a user force
     private fun handleMovement(deltaTime: Float) {
 
+        if((bState.value.velocity.xPos != 0f && abs(bState.value.velocity.xPos) < 0.000001f)||bState.value.position.xPos < 0f || bState.value.position.xPos > 2500f){
+            promptRestart()
+        }
+
         val gravityForce = Vector2.VectorConst.UP.scale(physicsConst.GRAVITY)
         val newVelocity = bState.value.velocity.add(gravityForce.scale(deltaTime))
 
-        val uF = bState.value.userForce.scale(physicsConst.USERFACTOR).scale(deltaTime)
+        val uF = bState.value.userForce.scale(gameState.value.userFactor).scale(deltaTime)
         newVelocity.add(uF)
 
         _bState.value.userForce = Vector2.VectorConst.EMPTY
@@ -134,7 +141,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 if (d is Line) {
                     _bState.value = d.handleCollision(_bState).value
                 } else if (d is Goal) {
-                    levelView()
+                    levelView(victory = true)
                 }
 
                 //TODO SOUND EFFECT IF DISPLAY = OFF
