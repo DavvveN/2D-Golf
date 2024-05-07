@@ -1,5 +1,6 @@
 package com.example.a2d_golf.userinterface
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,14 +13,13 @@ import com.example.a2d_golf.Vector2
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
-import kotlin.math.max
-import kotlin.math.min
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.Stroke
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
-fun MovementArrow(modifier : Modifier,arrowState : MovementArrowState ){
+fun MovementArrow(modifier: Modifier, arrowState: StateFlow<MovementArrowState>){
+
+    var aS = arrowState.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -27,8 +27,8 @@ fun MovementArrow(modifier : Modifier,arrowState : MovementArrowState ){
                 detectDragGestures(
                     onDrag = { change, dragAmount ->
                         change.consume()
-                        arrowState.interaction(
-                            arrowState.position.sub(
+                        aS.value.interaction(
+                            aS.value.position.sub(
                                 Vector2(
                                     dragAmount.x,
                                     dragAmount.y
@@ -37,54 +37,16 @@ fun MovementArrow(modifier : Modifier,arrowState : MovementArrowState ){
                         )
                     },
                     onDragEnd = {
-                        arrowState.launchBall()
+                        aS.value.launchBall()
                     }
                 )
             }
         ){
-        if(arrowState.display){
-//            val bState = arrowState._bState.collectAsState()
-//
-//            //A beizer curve to illustrate ball trajectory
-//            val path = Path()
-//            path.moveTo(bState.value.position.xPos, bState.value.position.yPos)
-//            val x1 = bState.value.position.xPos + (arrowState.position.xPos - bState.value.position.xPos) / 2
-//            val y1 = arrowState.position.yPos
-//            path.quadraticBezierTo(x1,y1,arrowState.position.xPos, arrowState.position.yPos)
-//
-//            // Create a rectangle that covers the area underneath the curve
-//            val rect = Rect(
-//                left = min(bState.value.position.xPos, arrowState.position.xPos),
-//                top = min(bState.value.position.yPos, arrowState.position.yPos),
-//                right = max(bState.value.position.xPos, arrowState.position.xPos),
-//                bottom = max(bState.value.position.yPos, arrowState.position.yPos)
-//            )
-//
-//            val path2 = Path().apply {
-//                addRect(rect)
-//            }
-//
-//
-//            // Subtract the area underneath the curve from the path
-//            val nP = Path()
-//            nP.op(path, path2 ,PathOperation.Difference)
-//
-//
-//            //Draw the trajectory indicator
-//            Canvas(modifier = Modifier.fillMaxSize()) {
-//
-//                drawPath(
-//                    path = path,
-//                    color = Color.Cyan,
-//                    style = Stroke(width = 30f)
-//
-//                )
-//
-//            }
+        if(aS.value.display){
             Canvas(modifier = Modifier.fillMaxSize()) {
                 drawLine(
-                    start = Offset(x = arrowState._bState.value.position.xPos, y = arrowState._bState.value.position.yPos),
-                    end = Offset(x = arrowState.position.xPos, y = arrowState.position.yPos),
+                    start = Offset(x = aS.value._bState.value.position.xPos, y = aS.value._bState.value.position.yPos),
+                    end = Offset(x = aS.value.position.xPos, y = aS.value.position.yPos),
                     color = Color(255, 255, 255),
                     strokeWidth = 30f
                 )

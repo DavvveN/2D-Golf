@@ -24,7 +24,8 @@ data class GameState(
     var currentLevel: Int = 1,
     var victory : Boolean = false,
     var promptRestart : Boolean = false,
-    var userFactor : Float = PhysicsConst().USERFACTOR
+    var userFactor : Float = PhysicsConst().USERFACTOR,
+    var start : Boolean = true
 )
 
 data class SettingsState(
@@ -47,7 +48,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     private val physicsConst = PhysicsConst()
 
-    private var _movementArrowState = MutableStateFlow(
+    var _movementArrowState = MutableStateFlow(
         MovementArrowState(
             position = bState.value.position,
             display = true,
@@ -61,17 +62,21 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         handleMovement(deltaTime)
     }
 
+    fun startMusic(){
+        _gameState.value = gameState.value.copy(start = false)
+    }
+
     fun restart() {
         _bState.value = bState.value.copy(
             velocity = Vector2(0f, 0f),
             position = gameState.value.levelData.levels.get(gameState.value.currentLevel).get(0).getStartPointAsVector(),
-            userForce = Vector2(0f, 0f),
+            userForce = Vector2.VectorConst.EMPTY,
             prevPositions = arrayListOf()
         )
 
         _movementArrowState.value = movementArrowState.value.copy(
             display = true,
-            position = bState.value.position,
+            position = gameState.value.levelData.levels.get(gameState.value.currentLevel).get(0).getStartPointAsVector(),
             _bState = _bState
         )
 

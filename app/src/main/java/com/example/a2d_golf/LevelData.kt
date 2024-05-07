@@ -25,7 +25,7 @@ data class LevelData(
         listOf(
             Line(Point(0f, 800f), Point(565f, 800f)),
             Line(Point(565f, 800f), Point(600f, 850f)),
-            Goal(Point(600f, 850f), Point(800f, 850f)),
+            Line(Point(600f, 850f), Point(800f, 850f)),
             Line(Point(800f, 850f), Point(900f, 400f)),
             Line(Point(900f, 400f), Point(1100f, 300f)),
             Line(Point(1100f, 300f), Point(1200f, 200f)),

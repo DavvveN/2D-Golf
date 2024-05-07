@@ -20,14 +20,12 @@ import com.example.a2d_golf.GameViewModel
 
 @Composable
 fun PromptRestart(viewModel: GameViewModel) {
-    val _gS = viewModel._gameState
-    val gS = _gS.collectAsState()
     Row(
         modifier = Modifier
             .fillMaxSize()
             .pointerInput(Unit) {
                 detectTapGestures {
-                    _gS.value = gS.value.copy(status = GameStatus.SETTINGS, promptRestart = true)
+                    viewModel.restart()
                 }
             },
         verticalAlignment = Alignment.CenterVertically,
